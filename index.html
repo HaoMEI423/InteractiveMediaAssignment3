@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="startScreen">
+
+        <h1>Precision Click</h1>
+
+        <p>
+            Click targets and build combos before time runs out.
+        </p>
+
+        <button id="startBtn">
+            Start
+        </button>
+
+    </div>
+
+    <div id="gameUI">
+
+        <div id="hud">
+
+            <div>
+                Score:
+                <span id="score">0</span>
+            </div>
+
+            <div>
+                Combo:
+                <span id="combo">0</span>
+            </div>
+
+            <div>
+                Time:
+                <span id="timer">30</span>
+            </div>
+
+        </div>
+
+        <div id="gameArea"></div>
+
+    </div>
+
+    <div id="endScreen">
+
+        <h1>Game Over</h1>
+
+        <p>
+            Final Score:
+            <span id="finalScore"></span>
+        </p>
+
+        <p>
+            Highest Combo:
+            <span id="finalCombo"></span>
+        </p>
+
+        <button onclick="location.reload()">
+            Play Again
+        </button>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

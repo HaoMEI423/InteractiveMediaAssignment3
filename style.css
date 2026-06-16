@@ -1,0 +1,166 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:Arial, sans-serif;
+
+    background:#111;
+
+    color:white;
+
+    overflow:hidden;
+}
+
+#startScreen,
+#endScreen{
+
+    position:absolute;
+
+    width:100%;
+    height:100vh;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:20px;
+}
+
+#endScreen{
+    display:none;
+}
+
+#gameUI{
+    display:none;
+}
+
+#hud{
+
+    position:absolute;
+
+    top:20px;
+    left:20px;
+
+    display:flex;
+
+    gap:30px;
+
+    z-index:100;
+
+    font-size:1.2rem;
+}
+
+#gameArea{
+
+    width:100vw;
+
+    height:100vh;
+
+    position:relative;
+}
+
+.target{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle,
+    #ff8a8a,
+    #ff3030);
+
+    cursor:pointer;
+
+    transition:
+    transform .15s,
+    opacity .15s;
+}
+
+.target:hover{
+
+    transform:scale(1.08);
+}
+
+.hit{
+
+    transform:scale(.5);
+
+    opacity:0;
+}
+
+/* Floating score */
+
+.floatingScore{
+
+    position:absolute;
+
+    pointer-events:none;
+
+    font-size:1.4rem;
+
+    font-weight:bold;
+
+    animation:floatUp .7s forwards;
+}
+
+@keyframes floatUp{
+
+    from{
+
+        opacity:1;
+        transform:translateY(0);
+    }
+
+    to{
+
+        opacity:0;
+        transform:translateY(-40px);
+    }
+}
+
+/* Combo popup */
+
+.comboPopup{
+
+    position:absolute;
+
+    top:80px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    font-size:2rem;
+
+    font-weight:bold;
+
+    animation:comboAnim .8s forwards;
+}
+
+@keyframes comboAnim{
+
+    from{
+
+        opacity:0;
+        transform:
+        translateX(-50%)
+        scale(.5);
+    }
+
+    to{
+
+        opacity:1;
+        transform:
+        translateX(-50%)
+        scale(1.2);
+    }
+}
