@@ -1,3 +1,29 @@
+/* ==================================================
+   SKY STRIKE
+   PIXEL AIR COMBAT TRAINING
+
+   DESIGN COMMENT
+
+   A retro pixel-art visual style was selected
+   because it is highly recognisable and can be
+   implemented efficiently within the scope of
+   this project.
+
+   Pixel graphics communicate gameplay elements
+   clearly while requiring fewer visual assets
+   than realistic artwork.
+
+   The blue colour palette was chosen to evoke
+   open skies and military aviation.
+
+   Bright orange and yellow are reserved for
+   explosions and rewards, creating strong visual
+   contrast and immediate feedback.
+
+   ================================================== */
+
+
+/* RESET */
 *{
     margin:0;
     padding:0;
@@ -6,41 +32,132 @@
 
 body{
 
-    font-family:Arial, sans-serif;
-
-    background:#111;
-
-    color:white;
-
     overflow:hidden;
+
+    cursor:none;
+
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+
+    background:black;
 }
 
-#startScreen,
-#endScreen{
 
-    position:absolute;
+/* ==================================================
+   START SCREEN
+================================================== */
+
+#startScreen{
+
+    position:fixed;
+
+    top:0;
+    left:0;
 
     width:100%;
-    height:100vh;
+    height:100%;
 
     display:flex;
 
     flex-direction:column;
 
     justify-content:center;
-
     align-items:center;
 
     gap:20px;
+
+    z-index:1000;
+
+    background:
+    linear-gradient(
+        to bottom,
+        #69a7ff,
+        #b5d4ff
+    );
+
 }
 
-#endScreen{
-    display:none;
+#startScreen h1{
+
+    font-size:5rem;
+
+    color:white;
+
+    text-shadow:
+        4px 4px black;
+
+    letter-spacing:5px;
 }
 
-#gameUI{
-    display:none;
+.subtitle{
+
+    font-size:1.2rem;
+
+    color:white;
 }
+
+#startBtn{
+
+    padding:
+    18px 40px;
+
+    font-size:1.2rem;
+
+    border:none;
+
+    cursor:pointer;
+
+    background:#ffca28;
+
+    transition:0.2s;
+}
+
+#startBtn:hover{
+
+    transform:scale(1.08);
+}
+
+
+/* ==================================================
+   GAME CONTAINER
+================================================== */
+
+#gameContainer{
+
+    display:none;
+
+    position:relative;
+
+    width:100vw;
+    height:100vh;
+
+    overflow:hidden;
+}
+
+
+/* ==================================================
+   BACKGROUND IMAGE
+
+   IMAGE LOCATION
+
+   images/background.png
+================================================== */
+
+#background{
+
+    position:absolute;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    pointer-events:none;
+}
+
+
+/* ==================================================
+   HUD
+================================================== */
 
 #hud{
 
@@ -51,65 +168,240 @@ body{
 
     display:flex;
 
-    gap:30px;
+    gap:15px;
 
     z-index:100;
-
-    font-size:1.2rem;
 }
+
+.hudBox{
+
+    background:
+    rgba(0,0,0,0.6);
+
+    color:white;
+
+    padding:
+    12px 18px;
+
+    border:
+    2px solid white;
+
+    font-weight:bold;
+
+    min-width:120px;
+
+    text-align:center;
+}
+
+
+/* ==================================================
+   GAME AREA
+================================================== */
 
 #gameArea{
 
-    width:100vw;
-
-    height:100vh;
+    width:100%;
+    height:100%;
 
     position:relative;
 }
 
-.target{
+
+/* ==================================================
+   AIRCRAFT
+================================================== */
+
+.aircraft{
+    position:absolute;
+
+    user-select:none;
+
+    cursor:none;
+
+    transition:
+    transform 0.1s;
+}
+
+.aircraft:hover{
+    transform:scale(1.05);
+}
+
+
+/* ==================================================
+   NORMAL FIGHTER
+
+   plane1.png
+   plane2.png
+================================================== */
+
+.fighter{
+
+    width:90px;
+}
+
+
+/* ==================================================
+   ELITE BOMBER
+
+   bomber.png
+
+   DESIGN COMMENT
+
+   Larger aircraft create a visual hierarchy.
+
+   Players immediately recognise them as
+   more valuable targets.
+================================================== */
+
+.bomber{
+
+    width:150px;
+}
+
+
+/* ==================================================
+   MINI BOSS
+
+   ace.png
+================================================== */
+
+.boss{
+
+    width:220px;
+}
+
+
+/* ==================================================
+   HEALTH BAR
+
+   DESIGN COMMENT
+
+   Health bars communicate the number of
+   remaining clicks required.
+
+   This improves usability because players
+   can predict outcomes and understand
+   progress visually.
+================================================== */
+
+.healthContainer{
 
     position:absolute;
 
-    border-radius:50%;
+    top:-12px;
+
+    width:100%;
+
+    height:8px;
+
+    background:black;
+
+    border:
+    1px solid white;
+}
+
+.healthBar{
+
+    width:100%;
+
+    height:100%;
 
     background:
-    radial-gradient(circle,
-    #ff8a8a,
-    #ff3030);
+    limegreen;
 
-    cursor:pointer;
-
-    transition:
-    transform .15s,
-    opacity .15s;
+    transition:0.2s;
 }
 
-.target:hover{
 
-    transform:scale(1.08);
+/* ==================================================
+   CROSSHAIR
+
+   IMAGE LOCATION
+
+   images/crosshair.png
+================================================== */
+
+#crosshair{
+
+    position:fixed;
+
+    width:50px;
+
+    pointer-events:none;
+
+    z-index:9999;
+
+    transform:
+    translate(-50%,-50%);
 }
 
-.hit{
 
-    transform:scale(.5);
+/* ==================================================
+   EXPLOSION
 
-    opacity:0;
+   IMAGE LOCATION
+
+   images/explosion.png
+================================================== */
+
+.explosion{
+
+    position:absolute;
+
+    width:120px;
+
+    pointer-events:none;
+
+    animation:
+    explode 0.5s forwards;
 }
 
-/* Floating score */
+@keyframes explode{
+
+    0%{
+
+        transform:
+        scale(0.3);
+
+        opacity:1;
+    }
+
+    100%{
+
+        transform:
+        scale(2);
+
+        opacity:0;
+    }
+}
+
+
+/* ==================================================
+   FLOATING SCORE
+
+   DESIGN COMMENT
+
+   Floating reward text provides immediate
+   feedback and reinforces successful actions.
+
+   This follows principles commonly used in
+   arcade games.
+================================================== */
 
 .floatingScore{
 
     position:absolute;
 
-    pointer-events:none;
-
-    font-size:1.4rem;
+    font-size:2rem;
 
     font-weight:bold;
 
-    animation:floatUp .7s forwards;
+    color:#ffd54f;
+
+    pointer-events:none;
+
+    animation:
+    floatUp 1s forwards;
 }
 
 @keyframes floatUp{
@@ -117,50 +409,148 @@ body{
     from{
 
         opacity:1;
-        transform:translateY(0);
+
+        transform:
+        translateY(0);
     }
 
     to{
 
         opacity:0;
-        transform:translateY(-40px);
-    }
-}
 
-/* Combo popup */
-
-.comboPopup{
-
-    position:absolute;
-
-    top:80px;
-
-    left:50%;
-
-    transform:translateX(-50%);
-
-    font-size:2rem;
-
-    font-weight:bold;
-
-    animation:comboAnim .8s forwards;
-}
-
-@keyframes comboAnim{
-
-    from{
-
-        opacity:0;
         transform:
-        translateX(-50%)
-        scale(.5);
-    }
-
-    to{
-
-        opacity:1;
-        transform:
-        translateX(-50%)
-        scale(1.2);
+        translateY(-80px);
     }
 }
+
+
+/* ==================================================
+   COMBO EFFECT
+================================================== */
+
+.comboFlash{
+
+    animation:
+    comboPulse 0.3s;
+}
+
+@keyframes comboPulse{
+
+    0%{
+
+        transform:scale(1);
+    }
+
+    50%{
+
+        transform:scale(1.3);
+    }
+
+    100%{
+
+        transform:scale(1);
+    }
+}
+
+
+/* ==================================================
+   SCREEN SHAKE
+
+   Used when Elite or Boss aircraft
+   are destroyed.
+
+   DESIGN COMMENT
+
+   Screen shake creates a stronger
+   sense of impact and increases
+   emotional feedback.
+================================================== */
+
+.shake{
+
+    animation:
+    shake 0.3s;
+}
+
+@keyframes shake{
+
+    0%{transform:translate(0px);}
+    25%{transform:translate(5px);}
+    50%{transform:translate(-5px);}
+    75%{transform:translate(5px);}
+    100%{transform:translate(0px);}
+}
+
+
+/* ==================================================
+   GAME OVER SCREEN
+================================================== */
+
+#gameOverScreen{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    display:none;
+
+    flex-direction:column;
+
+    justify-content:center;
+    align-items:center;
+
+    gap:20px;
+
+    z-index:1000;
+
+    background:
+    rgba(0,0,0,0.9);
+
+    color:white;
+}
+
+#gameOverScreen h1{
+
+    font-size:4rem;
+}
+
+#gameOverScreen button{
+
+    padding:
+    15px 30px;
+
+    font-size:1.1rem;
+
+    border:none;
+
+    cursor:pointer;
+
+    background:
+    #ffca28;
+}
+
+
+/* ==================================================
+   AI USAGE COMMENT
+
+   ChatGPT was used during development to:
+
+   1. Debug aircraft spawning issues.
+
+   2. Learn how requestAnimationFrame()
+      can be used to create smooth
+      movement animations.
+
+   3. Refactor repeated code into reusable
+      functions.
+
+   4. Improve code readability through
+      clearer naming conventions.
+
+   Final testing and implementation were
+   completed manually by the designer.
+================================================== */

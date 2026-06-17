@@ -9,64 +9,99 @@
 </head>
 
 <body>
+    <!-- =========================
+         START SCREEN
+    ========================== -->
+
     <div id="startScreen">
 
-        <h1>Precision Click</h1>
+        <h1>SKY STRIKE</h1>
 
-        <p>
-            Click targets and build combos before time runs out.
+        <p class="subtitle">
+            Pixel Air Combat Training
         </p>
 
         <button id="startBtn">
-            Start
+            START MISSION
         </button>
 
     </div>
 
-    <div id="gameUI">
+
+    <!-- =========================
+         GAME UI
+    ========================== -->
+
+    <div id="gameContainer">
+
+        <!-- BACKGROUND IMAGE -->
+        <!-- Replace with background.png -->
+
+        <img
+            id="background"
+            src="images/background.png"
+            alt="Background">
+
+        <!-- SCORE PANEL -->
 
         <div id="hud">
 
-            <div>
+            <div class="hudBox">
                 Score:
                 <span id="score">0</span>
             </div>
 
-            <div>
+            <div class="hudBox">
                 Combo:
                 <span id="combo">0</span>
             </div>
 
-            <div>
+            <div class="hudBox">
                 Time:
-                <span id="timer">30</span>
+                <span id="timer">60</span>
             </div>
 
         </div>
 
-        <div id="gameArea"></div>
+        <!-- AIRCRAFT SPAWN AREA -->
+
+        <div id="gameArea">
+
+        </div>
+
+        <!-- CUSTOM CROSSHAIR -->
+
+        <!-- Replace with crosshair.png -->
+
+        <img
+            id="crosshair"
+            src="images/crosshair.png"
+            alt="Crosshair">
 
     </div>
 
-    <div id="endScreen">
 
-        <h1>Game Over</h1>
+    <!-- =========================
+         GAME OVER SCREEN
+    ========================== -->
+
+    <div id="gameOverScreen">
+
+        <h1>MISSION COMPLETE</h1>
 
         <p>
             Final Score:
-            <span id="finalScore"></span>
+            <span id="finalScore">0</span>
         </p>
 
-        <p>
-            Highest Combo:
-            <span id="finalCombo"></span>
-        </p>
-
-        <button onclick="location.reload()">
-            Play Again
+        <button id="restartBtn">
+            PLAY AGAIN
         </button>
 
     </div>
+
     <script src="script.js"></script>
+
 </body>
+
 </html>
