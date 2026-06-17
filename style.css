@@ -1,63 +1,116 @@
-/* ==================================================
-   SKY STRIKE
-   PIXEL AIR COMBAT TRAINING
+/*
+=====================================================
 
-   DESIGN COMMENT
+PIXEL AIR DEFENCE
+STYLE DOCUMENTATION
 
-   A retro pixel-art visual style was selected
-   because it is highly recognisable and can be
-   implemented efficiently within the scope of
-   this project.
+VISUAL DESIGN RATIONALE
 
-   Pixel graphics communicate gameplay elements
-   clearly while requiring fewer visual assets
-   than realistic artwork.
+The visual style is inspired by classic arcade
+shooters and pixel-art aviation games.
 
-   The blue colour palette was chosen to evoke
-   open skies and military aviation.
+A dark blue colour palette was selected to
+simulate aerial combat at high altitude while
+creating strong contrast against aircraft sprites.
 
-   Bright orange and yellow are reserved for
-   explosions and rewards, creating strong visual
-   contrast and immediate feedback.
+The interface intentionally uses a minimal HUD
+to avoid distracting players from the primary
+interaction task.
 
-   ================================================== */
+This decision was influenced by usability
+principles that recommend reducing unnecessary
+visual clutter.
+
+The design prioritises:
+
+1. Target visibility
+2. Interaction clarity
+3. Immediate feedback
+4. Consistent visual hierarchy
+
+Pixel-art styling was chosen because it:
+
+- Matches the arcade theme
+- Simplifies asset creation
+- Supports future expansion
+- Creates a recognisable identity
+
+AI ASSISTANCE
+
+ChatGPT was used to research:
+
+- CSS layout techniques
+- Layering systems
+- HUD positioning
+- Animation implementation
+
+Final visual decisions were made by the student.
+
+=====================================================
+*/
 
 
-/* RESET */
+
+/* ==========================
+   GLOBAL RESET
+========================== */
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
 
+html,
 body{
-
+    width:100%;
+    height:100%;
     overflow:hidden;
 
-    cursor:none;
+    font-family:Arial, Helvetica, sans-serif;
 
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-
-    background:black;
+    background:#081423;
 }
 
 
-/* ==================================================
+
+/*
+=====================================================
+
+USABILITY COMMENT
+
+Unlike the game screen, the start screen
+must preserve the standard mouse cursor.
+
+During testing, hiding the cursor globally
+caused usability issues because users could
+not immediately identify interactive buttons.
+
+The cursor is therefore only hidden during
+active gameplay via JavaScript.
+
+=====================================================
+*/
+
+
+
+body{
+    cursor:default;
+}
+
+
+
+/* ==========================
    START SCREEN
-================================================== */
+========================== */
 
 #startScreen{
-
-    position:fixed;
-
-    top:0;
-    left:0;
+    position:absolute;
 
     width:100%;
     height:100%;
 
     display:flex;
-
     flex-direction:column;
 
     justify-content:center;
@@ -65,82 +118,143 @@ body{
 
     gap:20px;
 
-    z-index:1000;
-
     background:
     linear-gradient(
         to bottom,
-        #69a7ff,
-        #b5d4ff
+        #081423,
+        #102742
     );
 
+    z-index:100;
 }
 
-#startScreen h1{
 
-    font-size:5rem;
+
+.title{
+
+    font-size:64px;
 
     color:white;
 
-    text-shadow:
-        4px 4px black;
+    letter-spacing:4px;
 
-    letter-spacing:5px;
+    text-shadow:
+    0 0 10px #4fa9ff,
+    0 0 25px #4fa9ff;
 }
+
+
 
 .subtitle{
 
-    font-size:1.2rem;
+    font-size:22px;
 
-    color:white;
+    color:#d8e6ff;
 }
 
-#startBtn{
 
-    padding:
-    18px 40px;
 
-    font-size:1.2rem;
+/*
+=====================================================
+
+BUTTON DESIGN COMMENT
+
+Large buttons were selected because they
+provide clear affordance and accessibility.
+
+The hover state gives immediate visual
+feedback indicating that the element can
+be interacted with.
+
+The blue colour palette supports visual
+consistency with the military aviation theme.
+
+=====================================================
+*/
+
+
+
+button{
+
+    padding:15px 35px;
 
     border:none;
 
-    cursor:pointer;
+    border-radius:10px;
 
-    background:#ffca28;
+    font-size:20px;
+
+    cursor:pointer;
 
     transition:0.2s;
 }
 
-#startBtn:hover{
+
+
+button:hover{
 
     transform:scale(1.08);
 }
 
 
-/* ==================================================
+
+#startBtn{
+
+    background:#3d95ff;
+
+    color:white;
+}
+
+
+
+#restartBtn{
+
+    background:#3d95ff;
+
+    color:white;
+}
+
+
+
+/* ==========================
    GAME CONTAINER
-================================================== */
+========================== */
 
 #gameContainer{
 
-    display:none;
+    width:100%;
+    height:100%;
 
     position:relative;
 
-    width:100vw;
-    height:100vh;
+    display:none;
 
     overflow:hidden;
 }
 
 
-/* ==================================================
-   BACKGROUND IMAGE
 
-   IMAGE LOCATION
+/*
+=====================================================
 
-   images/background.png
-================================================== */
+IMAGE INSERTION POINT
+
+Asset:
+assets/background.png
+
+The background image should be a pixel-art
+sky environment.
+
+A static background was selected to maintain
+focus on moving aircraft targets.
+
+Future versions could include scrolling clouds
+or parallax effects.
+
+=====================================================
+*/
+
+
 
 #background{
 
@@ -151,13 +265,14 @@ body{
 
     object-fit:cover;
 
-    pointer-events:none;
+    z-index:1;
 }
 
 
-/* ==================================================
+
+/* ==========================
    HUD
-================================================== */
+========================== */
 
 #hud{
 
@@ -170,328 +285,116 @@ body{
 
     gap:15px;
 
-    z-index:100;
+    z-index:50;
 }
+
+
+
+/*
+=====================================================
+
+VISUAL HIERARCHY COMMENT
+
+The HUD remains in the top-left corner because
+players naturally scan this region for score
+information.
+
+Information is separated into small containers
+to improve readability.
+
+=====================================================
+*/
+
+
 
 .hudBox{
 
     background:
-    rgba(0,0,0,0.6);
+    rgba(
+        0,
+        0,
+        0,
+        0.6
+    );
 
     color:white;
 
-    padding:
-    12px 18px;
+    padding:12px 18px;
 
-    border:
-    2px solid white;
+    border:2px solid #4fa9ff;
 
-    font-weight:bold;
+    border-radius:8px;
 
-    min-width:120px;
-
-    text-align:center;
+    font-size:18px;
 }
 
 
-/* ==================================================
+
+/* ==========================
    GAME AREA
-================================================== */
+========================== */
 
 #gameArea{
 
+    position:absolute;
+
     width:100%;
     height:100%;
 
-    position:relative;
+    z-index:10;
 }
 
 
-/* ==================================================
-   AIRCRAFT
-================================================== */
 
-.aircraft{
-    position:absolute;
-
-    user-select:none;
-
-    cursor:none;
-
-    transition:
-    transform 0.1s;
-}
-
-.aircraft:hover{
-    transform:scale(1.05);
-}
-
-
-/* ==================================================
-   NORMAL FIGHTER
-
-   plane1.png
-   plane2.png
-================================================== */
-
-.fighter{
-
-    width:90px;
-}
-
-
-/* ==================================================
-   ELITE BOMBER
-
-   bomber.png
-
-   DESIGN COMMENT
-
-   Larger aircraft create a visual hierarchy.
-
-   Players immediately recognise them as
-   more valuable targets.
-================================================== */
-
-.bomber{
-
-    width:150px;
-}
-
-
-/* ==================================================
-   MINI BOSS
-
-   ace.png
-================================================== */
-
-.boss{
-
-    width:220px;
-}
-
-
-/* ==================================================
-   HEALTH BAR
-
-   DESIGN COMMENT
-
-   Health bars communicate the number of
-   remaining clicks required.
-
-   This improves usability because players
-   can predict outcomes and understand
-   progress visually.
-================================================== */
-
-.healthContainer{
-
-    position:absolute;
-
-    top:-12px;
-
-    width:100%;
-
-    height:8px;
-
-    background:black;
-
-    border:
-    1px solid white;
-}
-
-.healthBar{
-
-    width:100%;
-
-    height:100%;
-
-    background:
-    limegreen;
-
-    transition:0.2s;
-}
-
-
-/* ==================================================
+/* ==========================
    CROSSHAIR
+========================== */
 
-   IMAGE LOCATION
 
-   images/crosshair.png
-================================================== */
+
+/*
+=====================================================
+
+IMAGE INSERTION POINT
+
+Asset:
+assets/crosshair.png
+
+The custom crosshair reinforces the role of the
+player as an air-defence operator.
+
+Replacing the default cursor increases thematic
+immersion while still supporting familiar mouse
+interaction.
+
+=====================================================
+*/
+
+
 
 #crosshair{
 
-    position:fixed;
+    position:absolute;
 
     width:50px;
+    height:50px;
 
     pointer-events:none;
 
-    z-index:9999;
+    z-index:999;
 
-    transform:
-    translate(-50%,-50%);
+    display:none;
 }
 
 
-/* ==================================================
-   EXPLOSION
 
-   IMAGE LOCATION
-
-   images/explosion.png
-================================================== */
-
-.explosion{
-
-    position:absolute;
-
-    width:120px;
-
-    pointer-events:none;
-
-    animation:
-    explode 0.5s forwards;
-}
-
-@keyframes explode{
-
-    0%{
-
-        transform:
-        scale(0.3);
-
-        opacity:1;
-    }
-
-    100%{
-
-        transform:
-        scale(2);
-
-        opacity:0;
-    }
-}
-
-
-/* ==================================================
-   FLOATING SCORE
-
-   DESIGN COMMENT
-
-   Floating reward text provides immediate
-   feedback and reinforces successful actions.
-
-   This follows principles commonly used in
-   arcade games.
-================================================== */
-
-.floatingScore{
-
-    position:absolute;
-
-    font-size:2rem;
-
-    font-weight:bold;
-
-    color:#ffd54f;
-
-    pointer-events:none;
-
-    animation:
-    floatUp 1s forwards;
-}
-
-@keyframes floatUp{
-
-    from{
-
-        opacity:1;
-
-        transform:
-        translateY(0);
-    }
-
-    to{
-
-        opacity:0;
-
-        transform:
-        translateY(-80px);
-    }
-}
-
-
-/* ==================================================
-   COMBO EFFECT
-================================================== */
-
-.comboFlash{
-
-    animation:
-    comboPulse 0.3s;
-}
-
-@keyframes comboPulse{
-
-    0%{
-
-        transform:scale(1);
-    }
-
-    50%{
-
-        transform:scale(1.3);
-    }
-
-    100%{
-
-        transform:scale(1);
-    }
-}
-
-
-/* ==================================================
-   SCREEN SHAKE
-
-   Used when Elite or Boss aircraft
-   are destroyed.
-
-   DESIGN COMMENT
-
-   Screen shake creates a stronger
-   sense of impact and increases
-   emotional feedback.
-================================================== */
-
-.shake{
-
-    animation:
-    shake 0.3s;
-}
-
-@keyframes shake{
-
-    0%{transform:translate(0px);}
-    25%{transform:translate(5px);}
-    50%{transform:translate(-5px);}
-    75%{transform:translate(5px);}
-    100%{transform:translate(0px);}
-}
-
-
-/* ==================================================
+/* ==========================
    GAME OVER SCREEN
-================================================== */
+========================== */
 
 #gameOverScreen{
 
-    position:fixed;
-
-    top:0;
-    left:0;
+    position:absolute;
 
     width:100%;
     height:100%;
@@ -505,52 +408,196 @@ body{
 
     gap:20px;
 
-    z-index:1000;
-
     background:
-    rgba(0,0,0,0.9);
+    rgba(
+        0,
+        0,
+        0,
+        0.85
+    );
 
     color:white;
+
+    z-index:200;
 }
+
+
 
 #gameOverScreen h1{
 
-    font-size:4rem;
-}
-
-#gameOverScreen button{
-
-    padding:
-    15px 30px;
-
-    font-size:1.1rem;
-
-    border:none;
-
-    cursor:pointer;
-
-    background:
-    #ffca28;
+    font-size:64px;
 }
 
 
-/* ==================================================
-   AI USAGE COMMENT
 
-   ChatGPT was used during development to:
+#gameOverScreen p{
 
-   1. Debug aircraft spawning issues.
+    font-size:28px;
+}
 
-   2. Learn how requestAnimationFrame()
-      can be used to create smooth
-      movement animations.
 
-   3. Refactor repeated code into reusable
-      functions.
 
-   4. Improve code readability through
-      clearer naming conventions.
+/* ==========================
+   FLOATING SCORE
+========================== */
 
-   Final testing and implementation were
-   completed manually by the designer.
-================================================== */
+
+
+/*
+=====================================================
+
+FEEDBACK DESIGN COMMENT
+
+Floating score text was added to provide
+immediate confirmation that a successful
+interaction occurred.
+
+Without visible feedback, users may not
+understand whether their action generated
+a reward.
+
+This system contributes to a satisfying
+interaction loop.
+
+=====================================================
+*/
+
+
+
+.floatingScore{
+
+    position:absolute;
+
+    color:#ffe066;
+
+    font-weight:bold;
+
+    font-size:24px;
+
+    pointer-events:none;
+
+    animation:
+    scoreFloat
+    1s
+    forwards;
+}
+
+
+
+@keyframes scoreFloat{
+
+    from{
+
+        opacity:1;
+
+        transform:
+        translateY(0px);
+    }
+
+    to{
+
+        opacity:0;
+
+        transform:
+        translateY(-60px);
+    }
+}
+
+
+
+/* ==========================
+   EXPLOSION EFFECT
+========================== */
+
+
+
+/*
+=====================================================
+
+VISUAL FEEDBACK COMMENT
+
+Explosions provide confirmation that an aircraft
+has been successfully destroyed.
+
+The animation acts as both reward feedback and
+state communication.
+
+Future iterations may replace this effect with
+sprite-sheet animation or particle systems.
+
+=====================================================
+*/
+
+
+
+.explosion{
+
+    position:absolute;
+
+    width:80px;
+    height:80px;
+
+    pointer-events:none;
+
+    animation:
+    explode
+    0.4s
+    forwards;
+}
+
+
+
+@keyframes explode{
+
+    from{
+
+        opacity:1;
+
+        transform:scale(0.4);
+    }
+
+    to{
+
+        opacity:0;
+
+        transform:scale(1.5);
+    }
+}
+
+
+
+/* ==========================
+   SCREEN SHAKE
+========================== */
+
+.shake{
+
+    animation:
+    shake
+    0.25s;
+}
+
+
+
+@keyframes shake{
+
+    0%{
+        transform:translateX(0);
+    }
+
+    25%{
+        transform:translateX(-5px);
+    }
+
+    50%{
+        transform:translateX(5px);
+    }
+
+    75%{
+        transform:translateX(-5px);
+    }
+
+    100%{
+        transform:translateX(0);
+    }
+}

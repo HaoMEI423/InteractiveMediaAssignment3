@@ -1,613 +1,899 @@
-/* ==================================================
-   DOM REFERENCES
-================================================== */
+/* =====================================================
+
+PIXEL AIR DEFENCE
+
+DESIGN DOCUMENTATION
+
+This project uses a simple state-machine structure.
+
+Game Flow:
+
+Start Screen
+↓
+Playing
+↓
+Game Over
+↓
+Restart
+
+Reason:
+
+Separating game states improves readability
+and scalability.
+
+Future expansions could include:
+
+- Multiple levels
+- Additional aircraft types
+- Boss stages
+- Upgrade systems
+- Sound settings
+
+This structure avoids needing to rewrite large
+sections of code later.
+
+===================================================== */
+
+
+
+/* =====================================================
+    DOM REFERENCES
+===================================================== */
 
 const startScreen = document.getElementById("startScreen");
 const gameContainer = document.getElementById("gameContainer");
-const gameArea = document.getElementById("gameArea");
+const gameOverScreen = document.getElementById("gameOverScreen");
 
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
 
-const gameOverScreen = document.getElementById("gameOverScreen");
+const gameArea = document.getElementById("gameArea");
 
 const scoreText = document.getElementById("score");
 const comboText = document.getElementById("combo");
 const timerText = document.getElementById("timer");
-
 const finalScore = document.getElementById("finalScore");
 
 const crosshair = document.getElementById("crosshair");
 
 
-/* ==================================================
-   GAME VARIABLES
 
-   DESIGN COMMENT
+/* =====================================================
+    GAME VARIABLES
+===================================================== */
 
-   The game uses only a small number of
-   variables to improve readability and
-   maintainability.
+/*
+Design Choice:
 
-   Simplicity was prioritised because the
-   project focuses on interaction design
-   rather than complex game systems.
-================================================== */
+Variables are kept globally accessible
+because this is a small-scale project.
+
+For larger productions:
+
+A GameManager class would be preferable.
+*/
 
 let score = 0;
-
 let combo = 0;
-
-let gameRunning = false;
 
 let gameTime = 60;
 
-let spawnLoop;
-let timerLoop;
+let gameRunning = false;
+
+let spawnInterval;
+let timerInterval;
 
 
-/* ==================================================
-   CROSSHAIR FOLLOW
 
-   DESIGN COMMENT
+/* =====================================================
+    START GAME
+===================================================== */
 
-   A custom crosshair was used instead of
-   the default mouse cursor to strengthen
-   the fantasy of controlling an anti-aircraft
-   targeting system.
-================================================== */
+startBtn.addEventListener("click", startGame);
 
-document.addEventListener("mousemove", (event) => {
-
-    crosshair.style.left = event.clientX + "px";
-    crosshair.style.top = event.clientY + "px";
-
-});
-
-
-/* ==================================================
-   START GAME
-================================================== */
-
-startBtn.addEventListener("click", () => {
+function startGame() {
 
     startScreen.style.display = "none";
 
     gameContainer.style.display = "block";
+
+    score = 0;
+    combo = 0;
+    gameTime = 60;
+
+    updateHUD();
+
+    gameRunning = true;
+
+    startTimer();
+
+    startSpawning();
+}
+
+
+
+/* =====================================================
+    RESTART GAME
+===================================================== */
+
+restartBtn.addEventListener("click", () => {
+
+    gameOverScreen.style.display = "none";
 
     startGame();
 
 });
 
 
-/* ==================================================
-   START FUNCTION
-================================================== */
 
-function startGame() {
+/* =====================================================
+    GAME OVER
+===================================================== */
 
-    score = 0;
-    combo = 0;
+function endGame() {
 
-    gameTime = 60;
+    gameRunning = false;
+
+    clearInterval(spawnInterval);
+    clearInterval(timerInterval);
+
+    document
+        .querySelectorAll(
+            ".fighter,.elite,.explosion,.floatingScore"
+        )
+        .forEach(element => element.remove());
+
+    gameContainer.style.display = "none";
+
+    gameOverScreen.style.display = "flex";
+
+    finalScore.textContent = score;
+}
+
+
+
+/* =====================================================
+    HUD UPDATE
+===================================================== */
+
+function updateHUD() {
 
     scoreText.textContent = score;
+
     comboText.textContent = combo;
-    timerText.textContent = gameTime;
-
-    gameRunning = true;
-
-    spawnLoop = setInterval(spawnAircraft, 1800);
-
-    timerLoop = setInterval(updateTimer, 1000);
-
-}
-
-
-/* ==================================================
-   TIMER SYSTEM
-
-   DESIGN COMMENT
-
-   A fixed 60-second session was selected
-   because it provides a complete gameplay
-   loop while remaining suitable for casual
-   play and classroom demonstrations.
-================================================== */
-
-function updateTimer() {
-
-    gameTime--;
 
     timerText.textContent = gameTime;
+}
 
-    if(gameTime <= 0){
 
-        endGame();
 
-    }
+/* =====================================================
+    TIMER SYSTEM
+===================================================== */
+
+/*
+Design Choice:
+
+60 seconds was chosen because it creates
+a short arcade-style gameplay session.
+
+This encourages replayability.
+
+Players can quickly restart and attempt
+to beat previous scores.
+*/
+
+function startTimer() {
+
+    timerInterval = setInterval(() => {
+
+        gameTime--;
+
+        updateHUD();
+
+        if (gameTime <= 0) {
+
+            endGame();
+
+        }
+
+    }, 1000);
 
 }
 
 
-/* ==================================================
-   SPAWN SYSTEM
 
-   DESIGN COMMENT
+/* =====================================================
+    CROSSHAIR SYSTEM
+===================================================== */
 
-   Aircraft are randomly selected to create
-   variety and uncertainty.
+/*
+Design Choice:
 
-   Probabilities:
+Cursor is hidden during gameplay.
 
-   Fighter = 70%
-   Bomber = 25%
-   Boss = 5%
+A custom crosshair improves immersion and
+supports the military air-defense theme.
 
-   This creates moments of surprise while
-   keeping the gameplay accessible.
-================================================== */
+Visual feedback reinforces player role.
 
-function spawnAircraft(){
+Potential Improvement:
 
-    if(!gameRunning) return;
+Animated radar-style crosshair.
+*/
 
-    const roll = Math.random();
+document.addEventListener("mousemove", (e) => {
 
-    if(roll < 0.70){
+    crosshair.style.left = e.clientX + "px";
+    crosshair.style.top = e.clientY + "px";
 
-        createAircraft("fighter");
+});
 
-    }
 
-    else if(roll < 0.95){
 
-        createAircraft("bomber");
+/* =====================================================
+    SPAWN SYSTEM
+===================================================== */
 
-    }
+/*
+Enemy Distribution:
 
-    else{
+80% Fighter
+20% Elite
 
-        createAircraft("boss");
+Elite aircraft create gameplay variety
+without requiring complex AI.
 
-    }
+The player immediately understands:
+
+Small plane = quick points
+Large plane = higher reward
+
+This improves readability.
+*/
+
+function startSpawning() {
+
+    spawnInterval = setInterval(() => {
+
+        let random = Math.random();
+
+        if(random < 0.8){
+
+            spawnFighter();
+
+        } else {
+
+            spawnElite();
+
+        }
+
+    }, 900);
 
 }
 
 
-/* ==================================================
-   CREATE AIRCRAFT
-================================================== */
 
-function createAircraft(type){
+/* =====================================================
+    CREATE FIGHTER
+===================================================== */
 
-    const aircraft = document.createElement("div");
+function spawnFighter() {
 
-    aircraft.classList.add("aircraft");
+    const fighter = document.createElement("img");
 
+    fighter.src = "assets/fighter.png";
 
-    let hp;
-    let points;
-    let image;
-    let size;
-    let speed;
+    fighter.classList.add("fighter");
 
 
-    /* ==========================================
-       AIRCRAFT TYPES
-    ========================================== */
 
-    if(type === "fighter"){
+    /*
+    Spawn Direction
 
-        hp = 1;
-        points = 100;
+    Aircraft may enter from either side.
 
-        image = Math.random() > 0.5
-        ? "images/plane1.png"
-        : "images/plane2.png";
+    This increases unpredictability and
+    player engagement.
+    */
 
-        size = 90;
+    const fromLeft = Math.random() > 0.5;
 
-        speed = 1.5;
-
-        aircraft.classList.add("fighter");
-    }
-
-    else if(type === "bomber"){
-
-        hp = 3;
-
-        points = 400;
-
-        image = "images/bomber.png";
-
-        size = 150;
-
-        speed = 1;
-
-        aircraft.classList.add("bomber");
-    }
-
-    else{
-
-        hp = 5;
-
-        points = 1000;
-
-        image = "images/ace.png";
-
-        size = 220;
-
-        speed = 0.7;
-
-        aircraft.classList.add("boss");
-    }
-
-
-    aircraft.dataset.hp = hp;
-    aircraft.dataset.maxHp = hp;
-    aircraft.dataset.points = points;
-
-
-    /* ==========================================
-       IMAGE
-    ========================================== */
-
-    const img = document.createElement("img");
-
-    img.src = image;
-
-    img.style.width = "100%";
-
-    aircraft.appendChild(img);
-
-
-    /* ==========================================
-       HEALTH BAR
-    ========================================== */
-
-    const healthContainer =
-    document.createElement("div");
-
-    healthContainer.classList.add("healthContainer");
-
-
-    const healthBar =
-    document.createElement("div");
-
-    healthBar.classList.add("healthBar");
-
-
-    healthContainer.appendChild(healthBar);
-
-    aircraft.appendChild(healthContainer);
-
-
-    /* ==========================================
-       START SIDE
-    ========================================== */
-
-    let fromLeft = Math.random() > 0.5;
-
-    let startX = fromLeft
-        ? -size
-        : window.innerWidth;
-
-    let endX = fromLeft
-        ? window.innerWidth + size
-        : -size;
-
-    let posY =
+    const y =
         Math.random() *
-        (window.innerHeight - 250)
-        + 100;
+        (window.innerHeight - 300);
+
+    fighter.style.top = y + "px";
 
 
-    aircraft.style.left = startX + "px";
-    aircraft.style.top = posY + "px";
 
-    if(!fromLeft){
+    if(fromLeft){
 
-        aircraft.style.transform =
-        "scaleX(-1)";
+        fighter.style.left = "-120px";
+
+    }else{
+
+        fighter.style.left =
+            window.innerWidth + "px";
+
+        fighter.style.transform =
+            "scaleX(-1)";
     }
 
 
-    gameArea.appendChild(aircraft);
+
+    gameArea.appendChild(fighter);
 
 
-    /* ==========================================
-       HIT DETECTION
 
-       DESIGN COMMENT
-
-       Larger aircraft require multiple
-       successful clicks.
-
-       This creates a simple risk-reward
-       system and encourages player
-       decision making.
-    ========================================== */
-
-    aircraft.addEventListener("click",(event)=>{
-
-        event.stopPropagation();
-
-        let currentHP =
-        parseInt(aircraft.dataset.hp);
-
-        currentHP--;
-
-        aircraft.dataset.hp = currentHP;
-
-        let maxHP =
-        parseInt(aircraft.dataset.maxHp);
-
-        let percent =
-        (currentHP/maxHP)*100;
-
-        healthBar.style.width =
-        percent + "%";
+    let speed =
+        3 +
+        Math.random() * 3;
 
 
-        if(currentHP <= 0){
 
-            destroyAircraft(
-                aircraft,
-                points
+    let hp = 1;
+
+
+
+    fighter.addEventListener("click", () => {
+
+        destroyEnemy(
+            fighter,
+            10
+        );
+
+    });
+
+
+
+    const movement = setInterval(() => {
+
+        let currentX =
+            parseFloat(
+                fighter.style.left
             );
 
+
+
+        if(fromLeft){
+
+            fighter.style.left =
+                currentX + speed + "px";
+
+        }else{
+
+            fighter.style.left =
+                currentX - speed + "px";
+
+        }
+
+
+
+        if(
+            currentX < -200 ||
+            currentX > window.innerWidth + 200
+        ){
+
+            fighter.remove();
+
+            clearInterval(movement);
+
+            combo = 0;
+
+            updateHUD();
+        }
+
+    },16);
+
+}
+/* =====================================================
+    ELITE AIRCRAFT
+===================================================== */
+
+/*
+Design Choice:
+
+Elite aircraft function as mini-bosses.
+
+Reasoning:
+
+A game consisting only of single-click
+targets quickly becomes repetitive.
+
+Adding aircraft with multiple hit points:
+
+- increases tension
+- introduces prioritisation
+- rewards accuracy
+
+This creates a deeper interaction loop
+without significantly increasing code
+complexity.
+
+Future Possibility:
+
+Elite aircraft could gain attack patterns,
+missiles or defensive behaviours.
+*/
+
+function spawnElite() {
+
+    const elite = document.createElement("img");
+
+    elite.src = "assets/elite.png";
+
+    elite.classList.add("elite");
+
+
+
+    const fromLeft = Math.random() > 0.5;
+
+    const y =
+        Math.random() *
+        (window.innerHeight - 350);
+
+    elite.style.top = y + "px";
+
+
+
+    if(fromLeft){
+
+        elite.style.left = "-180px";
+
+    }else{
+
+        elite.style.left =
+            window.innerWidth + "px";
+
+        elite.style.transform =
+            "scaleX(-1)";
+    }
+
+
+
+    gameArea.appendChild(elite);
+
+
+
+    let hp = 5;
+
+    let speed = 2;
+
+
+
+    elite.addEventListener("click", () => {
+
+        hp--;
+
+        createHitFlash(elite);
+
+        if(hp <= 0){
+
+            destroyEnemy(
+                elite,
+                50
+            );
+
+            clearInterval(move);
         }
 
     });
 
 
-    /* ==========================================
-       MOVEMENT
 
-       AI COMMENT
+    const move = setInterval(() => {
 
-       ChatGPT was used to understand
-       requestAnimationFrame and improve
-       movement smoothness compared with
-       using setInterval.
-    ========================================== */
+        let currentX =
+            parseFloat(
+                elite.style.left
+            );
 
-    let currentX = startX;
 
-    function moveAircraft(){
-
-        if(!gameRunning){
-
-            aircraft.remove();
-            return;
-        }
 
         if(fromLeft){
 
-            currentX += speed;
+            elite.style.left =
+                currentX + speed + "px";
+
+        }else{
+
+            elite.style.left =
+                currentX - speed + "px";
 
         }
 
-        else{
-
-            currentX -= speed;
-
-        }
-
-        aircraft.style.left =
-        currentX + "px";
 
 
         if(
-            (fromLeft && currentX > endX) ||
-            (!fromLeft && currentX < endX)
+            currentX < -300 ||
+            currentX > window.innerWidth + 300
         ){
 
-            aircraft.remove();
+            elite.remove();
+
+            clearInterval(move);
 
             combo = 0;
 
-            comboText.textContent = combo;
-
-            return;
+            updateHUD();
         }
 
-        requestAnimationFrame(moveAircraft);
-
-    }
-
-    moveAircraft();
+    },16);
 
 }
 
 
-/* ==================================================
-   DESTROY AIRCRAFT
-================================================== */
 
-function destroyAircraft(aircraft, points){
+/* =====================================================
+    HIT FEEDBACK
+===================================================== */
 
-    score += points;
+/*
+Feedback Design:
+
+When a player hits an elite aircraft,
+a brief flash effect confirms the hit.
+
+Immediate feedback is important because
+the enemy does not disappear instantly.
+
+Without this effect, users may think
+their click was not registered.
+*/
+
+function createHitFlash(enemy){
+
+    enemy.classList.add("hitFlash");
+
+    setTimeout(() => {
+
+        enemy.classList.remove("hitFlash");
+
+    },100);
+
+}
+
+
+
+/* =====================================================
+    DESTROY ENEMY
+===================================================== */
+
+/*
+Interaction Loop:
+
+Click
+→ Explosion
+→ Score Gain
+→ Combo Increase
+→ Audio/Visual Reward
+
+Providing multiple feedback channels
+creates a satisfying player experience.
+*/
+
+function destroyEnemy(enemy, points){
+
+    if(!gameRunning) return;
 
     combo++;
 
-    scoreText.textContent = score;
+    score += points;
 
-    comboText.textContent = combo;
+    score += combo;
 
-    comboText.classList.add("comboFlash");
+    updateHUD();
 
-    setTimeout(()=>{
+    createExplosion(enemy);
 
-        comboText.classList.remove(
-            "comboFlash"
-        );
-
-    },300);
-
-
-    createExplosion(
-        aircraft.offsetLeft,
-        aircraft.offsetTop
+    createFloatingText(
+        "+" + (points + combo),
+        enemy.offsetLeft,
+        enemy.offsetTop
     );
 
-    createFloatingScore(
-        aircraft.offsetLeft,
-        aircraft.offsetTop,
-        points
-    );
+    screenShake();
 
-
-    if(points >= 400){
-
-        gameContainer.classList.add("shake");
-
-        setTimeout(()=>{
-
-            gameContainer.classList.remove(
-                "shake"
-            );
-
-        },300);
-
-    }
-
-    aircraft.remove();
+    enemy.remove();
 
 }
 
 
-/* ==================================================
-   EXPLOSION EFFECT
 
-   IMAGE LOCATION
+/* =====================================================
+    EXPLOSION EFFECT
+===================================================== */
 
-   images/explosion.png
-================================================== */
+/*
+Visual Feedback:
 
-function createExplosion(x,y){
+Explosions communicate success.
+
+A simple sprite-based effect was chosen
+instead of particle simulation because:
+
+- easier implementation
+- lower performance cost
+- suits pixel-art aesthetic
+*/
+
+function createExplosion(enemy){
 
     const explosion =
-    document.createElement("img");
+        document.createElement("img");
 
     explosion.src =
-    "images/explosion.png";
+        "assets/explosion.png";
 
-    explosion.classList.add("explosion");
+    explosion.classList.add(
+        "explosion"
+    );
 
-    explosion.style.left = x + "px";
-    explosion.style.top = y + "px";
+
+
+    explosion.style.left =
+        enemy.offsetLeft + "px";
+
+    explosion.style.top =
+        enemy.offsetTop + "px";
+
+
 
     gameArea.appendChild(explosion);
 
-    setTimeout(()=>{
+
+
+    setTimeout(() => {
 
         explosion.remove();
 
-    },500);
+    },400);
 
 }
 
 
-/* ==================================================
-   FLOATING SCORE
-================================================== */
 
-function createFloatingScore(x,y,points){
+/* =====================================================
+    FLOATING SCORE
+===================================================== */
 
-    const scorePopup =
-    document.createElement("div");
+/*
+Design Choice:
 
-    scorePopup.classList.add(
+Floating score indicators reinforce
+positive player actions.
+
+The reward appears exactly where
+the interaction occurred.
+
+This creates stronger action-result
+association.
+*/
+
+function createFloatingText(
+    text,
+    x,
+    y
+){
+
+    const popup =
+        document.createElement("div");
+
+    popup.classList.add(
         "floatingScore"
     );
 
-    scorePopup.innerText =
-    "+" + points;
+    popup.textContent = text;
 
-    scorePopup.style.left = x + "px";
-    scorePopup.style.top = y + "px";
+    popup.style.left = x + "px";
 
-    gameArea.appendChild(scorePopup);
+    popup.style.top = y + "px";
 
-    setTimeout(()=>{
 
-        scorePopup.remove();
+
+    gameArea.appendChild(popup);
+
+
+
+    setTimeout(() => {
+
+        popup.remove();
 
     },1000);
 
 }
 
 
-/* ==================================================
-   MISS CLICK
 
-   DESIGN COMMENT
+/* =====================================================
+    SCREEN SHAKE
+===================================================== */
 
-   Missing a target resets the combo.
+/*
+Design Choice:
 
-   This encourages accuracy while avoiding
-   harsh penalties.
-================================================== */
+Screen shake increases impact.
 
-gameArea.addEventListener("click",()=>{
+Used sparingly because excessive camera
+movement can reduce usability.
 
-    combo = 0;
+A short duration creates excitement
+without causing frustration.
+*/
 
-    comboText.textContent = combo;
+function screenShake(){
 
-});
+    gameContainer.classList.add(
+        "shake"
+    );
 
+    setTimeout(() => {
 
-/* ==================================================
-   END GAME
-================================================== */
+        gameContainer.classList.remove(
+            "shake"
+        );
 
-function endGame(){
-
-    gameRunning = false;
-
-    clearInterval(spawnLoop);
-
-    clearInterval(timerLoop);
-
-    finalScore.textContent = score;
-
-    gameOverScreen.style.display =
-    "flex";
+    },150);
 
 }
 
 
-/* ==================================================
-   RESTART GAME
-================================================== */
 
-restartBtn.addEventListener("click",()=>{
+/* =====================================================
+    DIFFICULTY SCALING
+===================================================== */
 
-    location.reload();
+/*
+Game Design Reflection:
 
-});
+Difficulty scaling encourages long-term
+engagement.
+
+As time decreases:
+
+- enemy speed increases
+- player workload increases
+
+This creates an escalating challenge.
+
+Potential Issue:
+
+If scaling becomes too aggressive,
+new players may feel overwhelmed.
+
+Future testing would be required to
+determine optimal values.
+*/
+
+setInterval(() => {
+
+    if(!gameRunning) return;
+
+    if(gameTime < 45){
+
+        spawnRateFast();
+
+    }
+
+},5000);
 
 
-/* ==================================================
-   AI USAGE COMMENT
 
-   ChatGPT assisted with:
+function spawnRateFast(){
 
-   - Debugging aircraft spawn logic.
+    clearInterval(spawnInterval);
 
-   - Understanding requestAnimationFrame.
+    spawnInterval = setInterval(() => {
 
-   - Improving code structure.
+        let random = Math.random();
 
-   - Refactoring repetitive functions.
+        if(random < 0.7){
 
-   - Learning best practices for DOM
-     manipulation and animation.
+            spawnFighter();
 
-   The final design decisions, testing,
-   balancing and implementation choices
-   were made by the designer.
-================================================== */
+        }else{
+
+            spawnElite();
+
+        }
+
+    },600);
+
+}
+
+
+
+/* =====================================================
+    FUTURE PROJECT REFLECTION
+===================================================== */
+
+/*
+
+BENEFITS OF THIS PROTOTYPE
+
+1.
+
+Strong visual clarity.
+
+Targets, crosshair and score elements
+are clearly separated.
+
+2.
+
+Expandable architecture.
+
+Additional enemy classes can be added
+without changing existing systems.
+
+3.
+
+Simple onboarding.
+
+Players understand the objective
+immediately.
+
+4.
+
+Short play sessions.
+
+Supports replayability and score chasing.
+
+
+
+IMPLEMENTATION CHALLENGES
+
+1.
+
+Balancing enemy spawn rates.
+
+Too many enemies may overwhelm users.
+
+Too few may reduce engagement.
+
+2.
+
+Asset consistency.
+
+All aircraft and effects must share
+the same pixel-art style.
+
+3.
+
+Performance.
+
+Large numbers of simultaneous DOM
+elements could eventually affect frame
+rate on low-end devices.
+
+A Canvas-based approach might be more
+appropriate for a larger-scale game.
+
+4.
+
+Accessibility.
+
+Some players may struggle with rapid
+mouse movement requirements.
+
+Future versions could include:
+
+- sensitivity settings
+- larger targets
+- difficulty options
+
+
+
+CONCLUSION
+
+The final design successfully combines
+pixel-art aesthetics with arcade-style
+interaction.
+
+The use of immediate feedback,
+score progression and target variation
+helps maintain player engagement while
+remaining technically achievable within
+the scope of the assignment.
+
+*/

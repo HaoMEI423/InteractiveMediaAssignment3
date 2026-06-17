@@ -1,107 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pixel Air Defence</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!-- =========================
-         START SCREEN
-    ========================== -->
 
-    <div id="startScreen">
+<!-- =====================================================
+    DESIGN DOCUMENTATION (HTML LEVEL COMMENT)
 
-        <h1>SKY STRIKE</h1>
+    CORE DESIGN INTENT:
 
-        <p class="subtitle">
-            Pixel Air Combat Training
-        </p>
+    This project is a browser-based click interaction game
+    where players act as an air defense operator.
 
-        <button id="startBtn">
-            START MISSION
-        </button>
+    The visual language is inspired by retro arcade shooters
+    and pixel-art military aviation games.
 
+    Key design goals:
+
+    1. Clear interaction loop (click → feedback → reward)
+    2. Immediate visual feedback
+    3. Simple but engaging difficulty progression
+    4. Minimal UI distraction
+    5. Strong thematic consistency (pixel air combat)
+
+    CONTEXT INFLUENCE:
+
+    References include:
+    - Whack-a-Mole (reaction-based clicking)
+    - Cookie Clicker (repetitive reward loop)
+    - Arcade shooters (Galaga, 1942)
+
+    These references informed:
+    - Target spawning system
+    - Score feedback system
+    - Increasing difficulty via enemy variety
+
+    AI USAGE:
+
+    ChatGPT was used as a learning assistant for:
+    - Structuring DOM-based game states
+    - Debugging animation timing issues
+    - Understanding event-driven interaction loops
+
+===================================================== -->
+
+<!-- =========================
+    START SCREEN
+========================= -->
+
+<div id="startScreen">
+
+    <h1 class="title">PIXEL AIR DEFENCE</h1>
+
+    <p class="subtitle">
+        Click to eliminate hostile aircraft
+    </p>
+
+    <button id="startBtn">START MISSION</button>
+</div>
+
+
+
+<!-- =========================
+    GAME SCREEN
+========================= -->
+
+<div id="gameContainer">
+
+    <img id="background" src="assets/background.png" alt="background">
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="hudBox">Score: <span id="score">0</span></div>
+        <div class="hudBox">Combo: <span id="combo">0</span></div>
+        <div class="hudBox">Time: <span id="timer">60</span></div>
     </div>
 
+    <!-- GAME AREA -->
+    <div id="gameArea"></div>
 
-    <!-- =========================
-         GAME UI
-    ========================== -->
+    <img id="crosshair" src="assets/crosshair.png" alt="crosshair">
+</div>
 
-    <div id="gameContainer">
+<!-- =========================
+    GAME OVER SCREEN
+========================= -->
+<div id="gameOverScreen">
 
-        <!-- BACKGROUND IMAGE -->
-        <!-- Replace with background.png -->
+    <h1>MISSION COMPLETE</h1>
 
-        <img
-            id="background"
-            src="images/background.png"
-            alt="Background">
+    <p>Final Score: <span id="finalScore">0</span></p>
 
-        <!-- SCORE PANEL -->
+    <button id="restartBtn">RESTART</button>
 
-        <div id="hud">
+</div>
 
-            <div class="hudBox">
-                Score:
-                <span id="score">0</span>
-            </div>
-
-            <div class="hudBox">
-                Combo:
-                <span id="combo">0</span>
-            </div>
-
-            <div class="hudBox">
-                Time:
-                <span id="timer">60</span>
-            </div>
-
-        </div>
-
-        <!-- AIRCRAFT SPAWN AREA -->
-
-        <div id="gameArea">
-
-        </div>
-
-        <!-- CUSTOM CROSSHAIR -->
-
-        <!-- Replace with crosshair.png -->
-
-        <img
-            id="crosshair"
-            src="images/crosshair.png"
-            alt="Crosshair">
-
-    </div>
-
-
-    <!-- =========================
-         GAME OVER SCREEN
-    ========================== -->
-
-    <div id="gameOverScreen">
-
-        <h1>MISSION COMPLETE</h1>
-
-        <p>
-            Final Score:
-            <span id="finalScore">0</span>
-        </p>
-
-        <button id="restartBtn">
-            PLAY AGAIN
-        </button>
-
-    </div>
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
 
 </body>
-
 </html>
