@@ -79,6 +79,14 @@ body{
     cursor:url("assets/crosshair.png") 32 32, crosshair !important;
 }
 
+/* unallowing players to drag the target
+image, this will provide a smoother
+clicking experience. */
+img{
+    user-select:none;
+    -webkit-user-drag:none;
+}
+
 /*
 =====================================================
 

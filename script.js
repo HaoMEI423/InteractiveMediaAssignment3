@@ -76,6 +76,12 @@ let gameRunning = false;
 let spawnInterval;
 let timerInterval;
 
+/* unallowing players to drag the target
+image, this will provide a smoother
+clicking experience. */
+document.addEventListener("dragstart", (e) => {
+    e.preventDefault();
+});
 
 
 /* =====================================================
@@ -247,6 +253,8 @@ function spawnFighter() {
 
     const fighter = document.createElement("img");
 
+    fighter.draggable = false;
+
     fighter.src = "assets/fighter.png";
 
     fighter.classList.add("fighter");
@@ -370,6 +378,8 @@ missiles or defensive behaviours.
 function spawnElite() {
 
     const elite = document.createElement("img");
+
+    elite.draggable = false;
 
     elite.src = "assets/elite.png";
 
