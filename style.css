@@ -98,13 +98,6 @@ active gameplay via JavaScript.
 */
 
 
-
-body{
-    cursor:default;
-}
-
-
-
 /* ==========================
    START SCREEN
 ========================== */
@@ -188,8 +181,6 @@ button{
     border-radius:10px;
 
     font-size:20px;
-
-    cursor:pointer;
 
     transition:0.2s;
 }
@@ -605,8 +596,6 @@ sprite-sheet animation or particle systems.
     user-select:none;
 
     z-index:20;
-
-    cursor:pointer;
 }
 
 
@@ -623,8 +612,6 @@ sprite-sheet animation or particle systems.
     user-select:none;
 
     z-index:20;
-
-    cursor:pointer;
 }
 
 /* Hit flash */
