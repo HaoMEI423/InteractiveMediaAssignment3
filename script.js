@@ -532,7 +532,7 @@ Click
 → Explosion
 → Score Gain
 → Combo Increase
-→ Audio/Visual Reward
+→ Reward
 
 Providing multiple feedback channels
 creates a satisfying player experience.
@@ -743,8 +743,6 @@ setInterval(() => {
 
 },5000);
 
-
-
 function spawnRateFast(){
 
     clearInterval(spawnInterval);
@@ -774,7 +772,6 @@ function spawnRateFast(){
 ===================================================== */
 
 /*
-
 BENEFITS OF THIS PROTOTYPE
 
 1.

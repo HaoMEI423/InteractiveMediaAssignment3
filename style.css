@@ -388,12 +388,7 @@ interaction.
     gap:20px;
 
     background:
-    rgba(
-        0,
-        0,
-        0,
-        0.85
-    );
+    rgba(0,0,0,0.85);
 
     color:white;
 
@@ -401,12 +396,10 @@ interaction.
 }
 
 
-
 #gameOverScreen h1{
 
     font-size:64px;
 }
-
 
 
 #gameOverScreen p{
@@ -419,8 +412,6 @@ interaction.
 /* ==========================
    FLOATING SCORE
 ========================== */
-
-
 
 /*
 =====================================================
@@ -441,8 +432,6 @@ interaction loop.
 =====================================================
 */
 
-
-
 .floatingScore{
 
     position:absolute;
@@ -460,7 +449,6 @@ interaction loop.
     1s
     forwards;
 }
-
 
 
 @keyframes scoreFloat{
@@ -507,8 +495,6 @@ sprite-sheet animation or particle systems.
 =====================================================
 */
 
-
-
 .explosion{
 
     position:absolute;
@@ -523,8 +509,6 @@ sprite-sheet animation or particle systems.
     0.4s
     forwards;
 }
-
-
 
 @keyframes explode{
 
@@ -543,8 +527,6 @@ sprite-sheet animation or particle systems.
     }
 }
 
-
-
 /* ==========================
    SCREEN SHAKE
 ========================== */
@@ -555,8 +537,6 @@ sprite-sheet animation or particle systems.
     shake
     0.25s;
 }
-
-
 
 @keyframes shake{
 
@@ -580,6 +560,8 @@ sprite-sheet animation or particle systems.
         transform:translateX(0);
     }
 }
+
+
 /* ==========================
    AIRCRAFT
 ========================== */
@@ -598,8 +580,6 @@ sprite-sheet animation or particle systems.
     z-index:20;
 }
 
-
-
 .elite{
 
     position:absolute;
@@ -614,7 +594,7 @@ sprite-sheet animation or particle systems.
     z-index:20;
 }
 
-/* Hit flash */
+/* Hit effect */
 .hitFlash{
 
     filter:brightness(2);
