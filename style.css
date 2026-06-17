@@ -70,6 +70,11 @@ body{
     font-family:Arial, Helvetica, sans-serif;
 
     background:#081423;
+
+    /* the cursor is replace by the crosshair
+    which could provide a better immersive felling 
+    to the players. */
+    cursor: url("assets/crosshair.png") 32 32, crosshair;
 }
 
 
@@ -369,23 +374,6 @@ interaction.
 
 =====================================================
 */
-
-
-
-#crosshair{
-
-    position:absolute;
-
-    width:50px;
-    height:50px;
-
-    pointer-events:none;
-
-    z-index:999;
-
-    display:none;
-}
-
 
 
 /* ==========================

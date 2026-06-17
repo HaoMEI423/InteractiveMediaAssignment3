@@ -1,5 +1,4 @@
 /* =====================================================
-
 PIXEL AIR DEFENCE
 
 DESIGN DOCUMENTATION
@@ -31,9 +30,7 @@ Future expansions could include:
 
 This structure avoids needing to rewrite large
 sections of code later.
-
 ===================================================== */
-
 
 
 /* =====================================================
@@ -53,10 +50,6 @@ const scoreText = document.getElementById("score");
 const comboText = document.getElementById("combo");
 const timerText = document.getElementById("timer");
 const finalScore = document.getElementById("finalScore");
-
-const crosshair = document.getElementById("crosshair");
-
-
 
 /* =====================================================
     GAME VARIABLES
@@ -200,34 +193,6 @@ function startTimer() {
     }, 1000);
 
 }
-
-
-
-/* =====================================================
-    CROSSHAIR SYSTEM
-===================================================== */
-
-/*
-Design Choice:
-
-Cursor is hidden during gameplay.
-
-A custom crosshair improves immersion and
-supports the military air-defense theme.
-
-Visual feedback reinforces player role.
-
-Potential Improvement:
-
-Animated radar-style crosshair.
-*/
-
-document.addEventListener("mousemove", (e) => {
-
-    crosshair.style.left = e.clientX + "px";
-    crosshair.style.top = e.clientY + "px";
-
-});
 
 
 
