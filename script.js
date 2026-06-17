@@ -251,8 +251,6 @@ function spawnFighter() {
 
     fighter.classList.add("fighter");
 
-
-
     /*
     Spawn Direction
 
@@ -270,8 +268,6 @@ function spawnFighter() {
 
     fighter.style.top = y + "px";
 
-
-
     if(fromLeft){
 
         fighter.style.left = "-120px";
@@ -285,11 +281,7 @@ function spawnFighter() {
             "scaleX(-1)";
     }
 
-
-
     gameArea.appendChild(fighter);
-
-
 
     let speed =
         3 +
@@ -298,8 +290,6 @@ function spawnFighter() {
 
 
     let hp = 1;
-
-
 
     fighter.addEventListener("click", () => {
 
@@ -310,16 +300,12 @@ function spawnFighter() {
 
     });
 
-
-
     const movement = setInterval(() => {
 
         let currentX =
             parseFloat(
                 fighter.style.left
             );
-
-
 
         if(fromLeft){
 
@@ -332,8 +318,6 @@ function spawnFighter() {
                 currentX - speed + "px";
 
         }
-
-
 
         if(
             currentX < -200 ||
@@ -352,6 +336,7 @@ function spawnFighter() {
     },16);
 
 }
+
 /* =====================================================
     ELITE AIRCRAFT
 ===================================================== */
@@ -390,8 +375,6 @@ function spawnElite() {
 
     elite.classList.add("elite");
 
-
-
     const fromLeft = Math.random() > 0.5;
 
     const y =
@@ -399,8 +382,6 @@ function spawnElite() {
         (window.innerHeight - 350);
 
     elite.style.top = y + "px";
-
-
 
     if(fromLeft){
 
@@ -415,17 +396,11 @@ function spawnElite() {
             "scaleX(-1)";
     }
 
-
-
     gameArea.appendChild(elite);
-
-
 
     let hp = 5;
 
     let speed = 2;
-
-
 
     elite.addEventListener("click", () => {
 
@@ -445,16 +420,12 @@ function spawnElite() {
 
     });
 
-
-
     const move = setInterval(() => {
 
         let currentX =
             parseFloat(
                 elite.style.left
             );
-
-
 
         if(fromLeft){
 
@@ -467,8 +438,6 @@ function spawnElite() {
                 currentX - speed + "px";
 
         }
-
-
 
         if(
             currentX < -300 ||
