@@ -601,3 +601,46 @@ sprite-sheet animation or particle systems.
         transform:translateX(0);
     }
 }
+/* ==========================
+   AIRCRAFT
+========================== */
+
+.fighter{
+
+    position:absolute;
+
+    width:120px;
+    height:auto;
+
+    image-rendering:pixelated;
+
+    user-select:none;
+
+    z-index:20;
+
+    cursor:pointer;
+}
+
+
+
+.elite{
+
+    position:absolute;
+
+    width:200px;
+    height:auto;
+
+    image-rendering:pixelated;
+
+    user-select:none;
+
+    z-index:20;
+
+    cursor:pointer;
+}
+
+/* Hit flash */
+.hitFlash{
+
+    filter:brightness(2);
+}
